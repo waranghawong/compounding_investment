@@ -5,6 +5,7 @@ include_once '../classes/cashin.classes.php';
 include_once '../classes/cashincntrl.classes.php';
 include "../classes/transactioncntr.classes.php";
 $cash_ins = new cashInCntrl();
+
 if(isset($_POST['cashin_submit'])){
 
     $cashin_amount = $_POST['cashin_amount'];

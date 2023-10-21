@@ -19,6 +19,7 @@ class cashIn extends DB{
         $datetimetoday = date("Y-m-d H:i:s");
         $con = $this->dbOpen();
         $stmt = $con->prepare("INSERT INTO payment_details (user_id,payment_amount, payment_method, payment_reference, date_purchased, time_purchased, payment_image, created_at) VALUES (?,?,?,?,?,?,?,?) ");
+        // $transaction = new transactionsctnr($user_id, null,'cash-in',)
 
         if(!$stmt->execute(array($user_id, $cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $cashin_image, $datetimetoday))){
             $stmt = null;
