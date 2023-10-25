@@ -1,7 +1,12 @@
 <?php
   include "../classes/userContr.classes.php";
+  include "../includes/wallet.inc.php";
   $userdata = new UserCntr();
   $user = $userdata->get_userdata();
+
+  $withdrawals = new walletCntrl();
+  $data = $withdrawals->getWithdrawables();
+
 
 if(isset($user)){
       
@@ -34,6 +39,8 @@ if(isset($user)){
     <link href="../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
     <link href="../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
@@ -136,177 +143,67 @@ if(isset($user)){
         </div>
         <!-- /top navigation -->
 
-        <!-- page content -->
-        <div class="right_col" role="main">
-        <table id="example-table" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+         <!-- page content -->
+         <div class="right_col" role="main">
+        
+
+        <div class="col-md-12 col-sm-12  ">
+                <div class="x_panel">
+                  <div class="x_title">
+                   <h5>List of approval users</h5>
+                   
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                  <div class="table-responsive">
+                  <table id="example-table" class="table table-striped table-bordered dt-responsive nowrap payment_table" cellspacing="0" width="100%">
                       <thead>
                         <tr>
+                          <th>Transaction ID</th>
                           <th>Name</th>
                           <th>Contact Number</th>
-                          <th>Address</th>
-                          <th>Email</th>
-                          <th>Total Payout</th>
+                          <th>Account Method</th>
+                          <th>Withdrawal Amount</th>
                           <th>Date of Payout</th>
                           <th>Status</th>
+                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Tiger</td>
-                          <td>Nixon</td>
-                          <td>System Architect</td>
-                          <td>Edinburgh</td>
-                          <td>61</td>
-                          <td>2011/04/25</td>
-                          <td>2011/04/25</td>
-                        </tr>
-                        <tr>
-                          <td>Garrett</td>
-                          <td>Winters</td>
-                          <td>Accountant</td>
-                          <td>Tokyo</td>
-                          <td>63</td>
-                          <td>2011/07/25</td>
-                          <td>2011/07/25</td>
-                        </tr>
-                        <tr>
-                          <td>Ashton</td>
-                          <td>Cox</td>
-                          <td>Junior Technical Author</td>
-                          <td>San Francisco</td>
-                          <td>66</td>
-                          <td>2009/01/12</td>
-                          <td>2009/01/12</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric</td>
-                          <td>Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>2012/03/29</td>
-                        </tr>
+                        
+
+                                         <?php
+                                          if($data == false){
+                                              
+                                          }
+                                          else{
+                                          foreach($data as $sd){ ?>
+                                              <tr id="data_<?= $sd['id'];?>">
+                                                <td> <?= $sd['transaction_id']?></td>
+                                                <td> <?= ucwords(strtolower($sd['account_name']), '\',. ')?></td>
+                                                <td> <?= $sd['account_number']?></td>
+                                                <td> <?= $sd['account_method']; ?></td>
+                                                <td> <?= $sd['amount'];  ?></td>
+                                                <td> <?= $sd['updated_at'];  ?></td>
+                                                <td> <span class="status_id_<?=  $sd['id']; ?>"> <?= $sd['status'] == "pending" ? '<span class="badge badge-warning"><h6>'.ucfirst($sd['status']).'<h6></span>' : ($sd['status'] == "approved" ? '<span class="badge badge-success"><h6>'.ucfirst($sd['status']).'<h6></span>' : '<span class="badge badge-danger"><h6>'.ucfirst($sd['status']).'<h6></span>' ) ; ?> </span></td>
+                                                <td><button type="button" class="btn btn-sm btn-success"  onclick="approveWithdrawal(<?= $sd['id'] ?>, '<?= $sd['transaction_id']?>', '<?= ucwords(strtolower($sd['account_name']), '\',. ')?>','<?= $sd['account_number']?>', '<?= $sd['account_method']; ?>', '<?= $sd['amount'];  ?>', '<?= $sd['user_id']; ?>')">Approve</button><button type="button" class="btn btn-sm btn-danger"  onclick="rejectWithdrawal(<?= $sd['id'] ?>, '<?= $sd['transaction_id']?>', '<?= ucwords(strtolower($sd['account_name']), '\',. ')?>','<?= $sd['account_number']?>', '<?= $sd['account_method']; ?>', '<?= $sd['amount'];  ?>', '<?= $sd['user_id']; ?>')">Reject</button></td>
+                                              </tr>
+                                            <?php  
+                                            }
+                                            }
+                                        ?>
                       
                       </tbody>
                     </table>
+                    </div>
+             
+                      
+                   
+
+                  </div>
+                </div>
+              </div>
 
 
             
@@ -350,6 +247,41 @@ if(isset($user)){
     <script src="../build/js/custom.min.js"></script>
 
     <script>
+         function approveWithdrawal(id, trans_id, accnt_name, accnt_number, accnt_method, amount, user_id){
+        var confirmation = confirm("confirm approval");
+
+        if(confirmation){
+            $.ajax({
+                method: "get",
+                url: "../includes/wallet.inc.php?approve_withdrawal=" + id+'&&transaction_id='+trans_id+'&&accnt_name='+accnt_name+'&&acccnt_number='+accnt_number+'&&accnt_method='+accnt_method+'&&amount='+amount+'&&user_id='+user_id,
+                success: function (response){
+                  var data = $.parseJSON(response)
+                  $('.status_id_'+id+'').html('<span class="badge badge-success"><h6>'+data.status+'<h6></span>')
+
+                  
+                }
+            })
+        }
+
+      }
+
+
+      function rejectWithdrawal(id, trans_id, accnt_name, accnt_number, accnt_method, amount, user_id){
+
+        var confirmation = confirm("are you sure you want to reject payment?");
+
+        if(confirmation){
+            $.ajax({
+                method: "get",
+                url: "../includes/wallet.inc.php?reject_withdrawal=" + id+'&&transaction_id='+trans_id+'&&accnt_name='+accnt_name+'&&acccnt_number='+accnt_number+'&&accnt_method='+accnt_method+'&&amount='+amount+'&&user_id='+user_id,
+                success: function (response){
+                  var data = $.parseJSON(response)
+                  $('.status_id_'+id+'').html('<span class="badge badge-danger"><h6>'+data.status+'<h6></span>')
+                }
+            })
+        }
+
+      }
       $(document).ready(function () {
     // Setup - add a text input to each footer cell
     $('#example-table thead tr')

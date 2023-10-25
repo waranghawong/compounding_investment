@@ -2,6 +2,7 @@
 include_once '../classes/db.classes.php';
 include_once '../classes/user_billing.classes.php';
 include_once '../classes/user_billingcntrl.classes.php';
+include_once '../includes/transactions.inc.php';
 
 $userBilling = new userBillingCntrl();
 if(isset($_POST['billing_submit'])){
@@ -16,6 +17,6 @@ if(isset($_POST['billing_submit'])){
 }
 
 if(isset($_GET['delete_billing'])){
-    $userBilling->deleteUserBilling($_GET['delete_billing']);
+    $userBilling->deleteUserBilling($_GET['delete_billing'],$_GET['user_id'],$_GET['account_method'],$_GET['account_name'],$_GET['account_number']);
 }
 ?>

@@ -200,6 +200,7 @@ if(isset($user)){
                                               </select>
                                               </div>
                                         </div>
+                                        <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                                         <div class="field item form-group">
                                             <label class="col-form-label col-md-3 col-sm-3  label-align">Account Address<span class="required">*</span></label>
                                             <div class="col-md-6 col-sm-6">
@@ -253,10 +254,10 @@ if(isset($user)){
                                             <tr id="data_<?= $sd['id'];?>">
                                               <td> <?= $sd['account_name']; ?></td>
                                               <td> <?= $sd['account_number']; ?></td>
-                                              <td> <?= $sd['name']; ?></td>
+                                              <td> <?= $sd['account_method']; ?></td>
                                               <td> <?= $sd['account_address']; ?></td>
                                               <td> <?= $sd['created_at']; ?></td>
-                                              <td><button type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" onclick="deleteBilling(<?= $sd['id']; ?>)" data-placement="top" title="Delete">Delete</button></td>
+                                              <td><button type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" onclick="deleteBilling('<?= $sd['id'] ?>', '<?= $sd['account_name'] ?>','<?= $sd['account_number'] ?>', '<?= $sd['account_method'] ?>')" data-placement="top" title="Delete">Delete</button></td>
                                             </tr>
                                           <?php  
                                           }
@@ -299,6 +300,7 @@ if(isset($user)){
                     <div class="form-row col-md-6 ">
                         <img id="preview" src="#" />
                     </div> -->
+                    <input type="hidden" name="user_id" value="<?= $user['id']; ?>">
                  
                 </div>
                 <div class="modal-footer justify-content-center">
@@ -365,13 +367,13 @@ if(isset($user)){
             }
         };
 
-        function deleteBilling(id){
-          var confirmation = confirm("are you sure you want to delete this registered user?");
+        function deleteBilling(id,account_name ,account_number, method){
+          var confirmation = confirm("are you sure you want to delete this mode of payment?");
 
           if(confirmation){
               $.ajax({
                   method: "get",
-                  url: "../includes/billing.inc.php?delete_billing=" + id,
+                  url: "../includes/billing.inc.php?delete_billing=" + id +'&&account_name='+account_name+'&&account_number='+account_number+'&&method='+method,
                   success: function (response){
                   $("#data_"+id).remove();
                   alert('successfully deleted!');

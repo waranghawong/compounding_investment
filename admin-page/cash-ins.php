@@ -29,7 +29,7 @@ if(isset($user)){
 
     <title>Cash-ins</title>
     <!-- Bootstrap -->
-    <link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -148,7 +148,7 @@ if(isset($user)){
         <div class="col-md-12 col-sm-12  ">
                 <div class="x_panel">
                   <div class="x_title">
-                   <h5>List of approval users</h5>
+                   <h5>Cash-Ins</h5>
                    
                     <div class="clearfix"></div>
                   </div>
@@ -160,10 +160,13 @@ if(isset($user)){
                                 <tr>
                                   <th>transaction Number</th>
                                   <th>Payment Amount</th>
+                                  <th>Name</th>
                                   <th>Payment Reference</th>
-                                  <th>Date Purchased</th>
-                                  <th>Time Purchased</th>
+                                  <th>Date and Time Purchased</th>
                                   <th>Image Receipt</th>
+                                  <th>Sent To</th>
+                                  <th>Account Number</th>
+                                  <th>Account Method</th>
                                   <th>Status</th>
                                   <th>Action</th>
                                 </tr>
@@ -179,12 +182,15 @@ if(isset($user)){
                                       <tr id="data_<?= $sd['payment_id'];?>">
                                         <td> <?= $sd['transaction_number']; ?></td>
                                         <td> <b>Php <?= $sd['payment_amount']; ?></b></td>
+                                        <td><?= $sd['first_name'].' '.$sd['last_name'] ?></td>
                                         <td> <?= $sd['payment_reference']; ?></td>
-                                        <td> <?= $sd['date_purchased']; ?></td>
-                                        <td> <?= $sd['time_purchased']; ?></td>
+                                        <td> <?= $sd['date_purchased'].' '.$sd['time_purchased']; ?></td>
                                         <td> <a data-toggle="modal" data-id="<?= $sd['payment_image']; ?>" class="payment_image" href="#"><image src="<?= $sd['payment_image']; ?>" height="150" width="100"></a></td>
+                                        <td> <?= $sd['account_name'] ?></td>
+                                        <td> <?= $sd['account_number'] ?></td>
+                                        <td> <?= $sd['account_method'] ?></td>
                                         <td> <span class="status_id_<?=  $sd['payment_id']; ?>"> <?= $sd['status'] == "pending" ? '<span class="badge badge-warning"><h6>'.ucfirst($sd['status']).'<h6></span>' : ($sd['status'] == "approved" ? '<span class="badge badge-success"><h6>'.ucfirst($sd['status']).'<h6></span>' : '<span class="badge badge-danger"><h6>'.ucfirst($sd['status']).'<h6></span>' ) ; ?> </span></td>
-                                        <td><button type="button" class="btn btn-sm btn-success"  onclick="approvePayment(<?= $sd['payment_id']; ?>)">Approve</button><button type="button" class="btn btn-sm btn-danger"  onclick="rejectPayment(<?= $sd['payment_id']; ?>)">Reject</button></td>
+                                        <td><button type="button" class="btn btn-sm btn-success"  onclick="approvePayment(<?= $sd['payment_id']; ?>,'<?= $sd['account_name'] ?>','<?= $sd['account_number'] ?>','<?= $sd['account_method'] ?>','<?= $sd['user_id'] ?>', '<?= $sd['transaction_number']; ?>')">Approve</button><button type="button" class="btn btn-sm btn-danger"  onclick="rejectPayment(<?= $sd['payment_id']; ?>,'<?= $sd['account_name'] ?>','<?= $sd['account_number'] ?>','<?= $sd['account_method'] ?>','<?= $sd['user_id'] ?>', '<?= $sd['transaction_number']; ?>')">Reject</button></td>
                                       </tr>
                                     <?php  
                                     }
@@ -269,6 +275,7 @@ if(isset($user)){
     <script src="../vendors/jszip/dist/jszip.min.js"></script>
     <script src="../vendors/pdfmake/build/pdfmake.min.js"></script>
     <script src="../vendors/pdfmake/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
 
      <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
@@ -337,8 +344,17 @@ if(isset($user)){
             },
             dom: 'Bfrtip',
             buttons: [
-                'print'
-            ]
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            'colvis'
+        ],
+        columnDefs: [ {
+            visible: false
+        } ]
         });
       });
 
@@ -349,13 +365,13 @@ if(isset($user)){
         $('.viewpaymentimage').modal();
       })
 
-      function approvePayment(id){
+      function approvePayment(id, account_name, account_number, account_method, user_id, transaction_number){
         var confirmation = confirm("confirm approval");
 
         if(confirmation){
             $.ajax({
                 method: "get",
-                url: "../includes/cashin.inc.php?approve_payment=" + id,
+                url: "../includes/cashin.inc.php?approve_payment=" + id+'&&account_name='+account_name+'&&account_number='+account_number+'&&account_method='+account_method+'&&user_id=' +user_id+'&&transaction_number='+transaction_number,
                 success: function (response){
                   var data = $.parseJSON(response)
                   $('.status_id_'+id+'').html('<span class="badge badge-success"><h6>'+data.status+'<h6></span>')
@@ -368,14 +384,14 @@ if(isset($user)){
       }
 
 
-      function rejectPayment(id){
+      function rejectPayment(id, account_name, account_number, account_method, user_id, transaction_number){
 
         var confirmation = confirm("are you sure you want to reject payment?");
 
         if(confirmation){
             $.ajax({
                 method: "get",
-                url: "../includes/cashin.inc.php?reject_payment=" + id,
+                url: "../includes/cashin.inc.php?reject_payment=" +id+'&&account_name='+account_name+'&&account_number='+account_number+'&&account_method='+account_method+'&&user_id=' +user_id+'&&transaction_number='+transaction_number,
                 success: function (response){
                   var data = $.parseJSON(response)
                   $('.status_id_'+id+'').html('<span class="badge badge-danger"><h6>'+data.status+'<h6></span>')

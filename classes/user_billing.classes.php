@@ -13,6 +13,7 @@ class userBilling extends DB{
             header("location: ../investors-panel/billing.php?error=stmtfailed");
             exit();
         }
+        $transaction = new transactionsctnr($user_id, null, $cashin_method, $datetimetoday,'Added account billing with account name: '.$account_name.' and account number: '.$account_number.'', null);
         header("location: ../investors-panel/billing.php?success=1");
     }
 
@@ -27,10 +28,12 @@ class userBilling extends DB{
 
     }
 
-    protected function deleteBilling($id){
+    protected function deleteBilling($id, $user_id, $account_method, $account_name, $account_number){
+        $datetimetoday = date("Y-m-d H:i:s");
         $connection = $this->dbOpen();
         $stmt = $connection->prepare("DELETE FROM user_billing WHERE id = ?");
         $stmt->execute([$id]);
+        $transaction = new transactionsctnr($user_id, null, $account_method, $datetimetoday, 'deleted billing with account name: '.$account_name.' and account number: '.$account_number.'', null);
     }
 
 }

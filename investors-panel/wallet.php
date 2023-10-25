@@ -288,7 +288,6 @@ if(isset($user)){
                             <span class="form-control-feedback left" aria-hidden="true">#</span>
                           </div>
                         </div>
-
                         <div class="item form-group">
                            <div class="col-md-9 col-sm-9  offset-md-3">
                             <button type="submit" name="submit_withdrawal" class="btn btn-primary">Submit</button>
@@ -343,9 +342,9 @@ if(isset($user)){
                                               <td> <?= $sd['amount']; ?></td>
                                               <td> <?= $sd['account_name']; ?></td>
                                               <td> <?= $sd['account_method']; ?></td>
-                                              <td> <?= $sd['status']; ?></td>
+                                              <td> <span class="status_id_<?=  $sd['id']; ?>"> <?= $sd['status'] == "pending" ? '<span class="badge badge-warning">'.ucfirst($sd['status']).'</span>' : ($sd['status'] == "approved" ? '<span class="badge badge-success">'.ucfirst($sd['status']).'</span>' : '<span class="badge badge-danger">'.ucfirst($sd['status']).'</span>' ) ; ?> </span></td>
                                               <td> <?= $sd['created_at']; ?></td>
-                                              <td><button type="button" class="btn btn-sm btn-danger" onclick="undoWithdrawal(<?= $sd['purchase_details_id'] ?>, <?= $sd['amount'] ?>, <?= $sd['id'] ?>)" ><i class="fa fa-trash"></i></button></td>
+                                              <td><button type="button" class="btn btn-sm btn-danger" onclick="undoWithdrawal(<?= $sd['purchase_details_id'] ?>, <?= $sd['amount'] ?>, <?= $sd['id'] ?>,<?= $user['id']?>, '<?= $sd['account_method']; ?>',)" ><i class="fa fa-trash"></i></button></td>
                                             </tr>
                                           <?php  
                                           }
@@ -430,17 +429,17 @@ if(isset($user)){
           }
       }
 
-      function undoWithdrawal(purchase_id, amount, id){
+      function undoWithdrawal(purchase_id, amount, id, user_id, account_method){
         var confirmation = confirm("are you sure you want to undo withdrawal?");
 
           if(confirmation){
               $.ajax({
                   method: "get",
-                  url: "../includes/wallet.inc.php?undo_withdrawal_id=" + purchase_id +'&&amount='+amount+'&&id='+id,
+                  url: "../includes/wallet.inc.php?undo_withdrawal_id=" + purchase_id +'&&amount='+amount+'&&id='+id+'&&user_id=' +user_id +'&&account_method=' +account_method ,
                   success: function (response){
                   $("#data_"+id).remove();
                   alert('successfully deleted!');
-                  location.reload();
+                  // location.reload();
                   }
               })
           }

@@ -132,7 +132,7 @@ if(isset($user)){
                   </a>
                   <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item"  href="javascript:;"> Profile</a>
-                    <a class="dropdown-item"  href="includes/logout.php"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                    <a class="dropdown-item"  href="../includes/logout.php"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                   </div>
                 </li>
 
@@ -315,7 +315,7 @@ if(isset($user)){
                                               <td> <?= $sd['account_number']; ?></td>
                                               <td> <?= $sd['account_method']; ?></td>
                                               <td> <?= $sd['account_address']; ?></td>
-                                              <td><button type="button" class="btn btn-sm btn-danger" onclick="deleteUserBilling(<?= $sd['id'] ?>)" ><i class="fa fa-trash"></i></button></td>
+                                              <td><button type="button" class="btn btn-sm btn-danger" onclick="deleteUserBilling(<?= $sd['id'] ?>, '<?= $user['id']?>', '<?= $sd['account_method']?>', '<?= $sd['account_name'] ?>', '<?= $sd['account_number'] ?>')" ><i class="fa fa-trash"></i></button></td>
                                             </tr>
                                           <?php  
                                           }
@@ -361,13 +361,13 @@ if(isset($user)){
     <script src="../build/js/custom.min.js"></script>
     <script>
 
-      function deleteUserBilling(id){
+      function deleteUserBilling(id, user_id, account_method, account_name, account_number){
         var confirmation = confirm("are you sure you want to delete this?");
 
           if(confirmation){
               $.ajax({
                   method: "get",
-                  url: "../includes/user_billing.inc.php?delete_billing=" + id,
+                  url: "../includes/user_billing.inc.php?delete_billing=" + id +'&&user_id='+user_id+'&&account_method='+account_method+'&&account_name='+account_name+'&&account_number='+account_number,
                   success: function (response){
                   $("#data_"+id).remove();
                   alert('successfully deleted!');

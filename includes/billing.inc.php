@@ -3,12 +3,14 @@
 include_once '../classes/db.classes.php';
 include_once '../classes/billing.classes.php';
 include_once '../classes/billingcntrl.classes.php';
+include_once 'transactions.inc.php';
 
 $billing = new billingCntrl();
 
 if(isset($_POST['btn_submit_account_method'])){
     $billing_method_name = $_POST['billing_method_name'];
-    $billing->insertAccountMethod($billing_method_name);
+    $user_id = $_POST['user_id'];
+    $billing->insertAccountMethod($billing_method_name, $user_id);
 
 }
 
@@ -17,13 +19,14 @@ if(isset($_POST['sbmt_billing'])){
     $account_number = $_POST["account_number"];
     $account_method = $_POST["account_method"];
     $account_address = $_POST["account_address"];
+    $user_id = $_POST['user_id'];
 
-    $billing->insertBilling($account_name,  $account_number,  $account_method, $account_address);
+    $billing->insertBilling($account_name,  $account_number,  $account_method, $account_address, $user_id);
 
 }
 
 if(isset($_GET['delete_billing'])){
-    $billing->deleteBilling($_GET['delete_billing']);
+    $billing->deleteBilling($_GET['delete_billing'], $_GET['account_name'],$_GET['account_number'],$_GET['method']);
 }
 
 ?>

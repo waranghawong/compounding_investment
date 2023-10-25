@@ -8,6 +8,15 @@
   $billing  = new cashInCntrl();
   $data = $billing->getAdminBilling();
 
+  $account_name = '';
+  $account_number = '';
+  $account_method = '';
+  foreach($data as $sd){
+    $account_name = $sd['account_name'];
+    $account_number = $sd['account_number'];
+    $account_method = $sd['name'];
+  }
+
 if(isset($user)){
   $id = $user['id'];
   $name = ucfirst($user['first_name']).' ' .ucfirst($user['last_name']);
@@ -253,7 +262,7 @@ if(isset($user)){
                               <option value=''>Select Payment Method</option>
                                 <?php
                                   foreach($data as $ds){
-                                    echo '<option value="'.$ds['name'].'">'.$ds['name'].'</option>';
+                                    echo '<option value="'.$ds['id'].'">'.$ds['name'].' ('.$ds['account_name'].' - '.$ds['account_number'].')</option>';
                                   }
                                 
                                 ?>
@@ -261,6 +270,7 @@ if(isset($user)){
                             <span class="fa fa-credit-card form-control-feedback left" aria-hidden="true"></span>
                           </div>
                         </div>
+        
 
                         <div class="item form-group">
                           <label class="col-form-label col-md-3 col-sm-3 label-align" for="reference"> <span class="required">*</span>
@@ -302,6 +312,9 @@ if(isset($user)){
                             </div>
                           </div>
                         </div>
+                        <input type="hidden" name="account_name" value="<?= $account_name; ?>">
+                        <input type="hidden" name="account_number" value="<?= $account_number; ?>">   
+                        <input type="hidden" name="cash_in_method" value="<?= $account_method; ?>">
                         <div class="image-area mt-4"><img id="imageResult" src="#" alt="" class="img-fluid rounded shadow-sm mx-auto d-block"></div>
 
 
@@ -364,7 +377,7 @@ if(isset($user)){
                                               <td> <?= $sd['created_at']; ?></td>
                                               <td> <?= $sd['date_withdrawable']; ?></td>
                                               <td> <?= $sd['lock_in']; ?></td>
-                                              <td>  <?= $sd['status'] == "pending" ? '<span class="badge badge-warning"><h6>'.ucfirst($sd['status']).'<h6></span>' : ($sd['status'] == "approved" ? '<span class="badge badge-success"><h6>'.ucfirst($sd['status']).'<h6></span>' : '<span class="badge badge-danger"><h6>'.ucfirst($sd['status']).'<h6></span>' ) ; ?></td>
+                                              <td> <span class="status_id_<?=  $sd['id']; ?>"> <?= $sd['status'] == "pending" ? '<span class="badge badge-warning">'.ucfirst($sd['status']).'</span>' : ($sd['status'] == "approved" ? '<span class="badge badge-success">'.ucfirst($sd['status']).'</span>' : '<span class="badge badge-danger">'.ucfirst($sd['status']).'</span>' ) ; ?> </span></td>
                                               <td><button type="button" class="btn btn-sm btn-success" onclick="openModal(<?= $sd['payment_id'] ?>)" ><i class="fa fa-eye"></i>View Details</button></td>
                                             </tr>
                                           <?php  

@@ -12,8 +12,8 @@ class userBillingCntrl extends userBilling{
         return $this->getUserBilling($id);
     }
 
-    public function deleteUserBilling($id){
-        $this->deleteBilling($id);
+    public function deleteUserBilling($id, $user_id, $account_method, $account_name, $account_number){
+        $this->deleteBilling($id, $user_id, $account_method, $account_name, $account_number);
         echo json_encode(["statusCode"=>200]);
     }
 

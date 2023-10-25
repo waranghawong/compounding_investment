@@ -1,6 +1,5 @@
 <?php
 
-
 class cashInCntrl extends cashIn{
 
     public function getAdminBilling(){
@@ -9,7 +8,7 @@ class cashInCntrl extends cashIn{
 
     }
 
-    public function insertCashin($cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $cashin_image, $user_id){
+    public function insertCashin($cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $cashin_image, $user_id,$account_name, $account_number, $account_method){
 
             if($this->checkPaymentMethod($cashin_method) == true){
                 header("location: cashin.php?error=payment_method_required");
@@ -17,7 +16,7 @@ class cashInCntrl extends cashIn{
             }
             $imageFile = $this->uploadImage($cashin_image);
 
-            return $this->insertPayment($cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $imageFile, $user_id);
+            return $this->insertPayment($cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $imageFile, $user_id,$account_name, $account_number,$account_method);
 
     }
 
@@ -107,14 +106,14 @@ class cashInCntrl extends cashIn{
         return $this->allCashins();
     }
 
-    public function approvePayment($id){
+    public function approvePayment($id,$account_name, $account_number, $account_method, $user_id, $trans_number){
 
-        return $this->approveUserPayment($id);
+        return $this->approveUserPayment($id,$account_name, $account_number, $account_method, $user_id, $trans_number);
 
     }
 
-    public function rejectPayment($id){
-        return $this->rejectUserPayment($id);
+    public function rejectPayment($id,$account_name, $account_number, $account_method, $user_id, $trans_number){
+        return $this->rejectUserPayment($id,$account_name, $account_number, $account_method, $user_id, $trans_number);
     }
 
     public function getUserPurchaseDetail($user){

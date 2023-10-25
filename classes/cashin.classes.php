@@ -6,7 +6,7 @@ class cashIn extends DB{
     protected function getBilling(){
 
         $connection = $this->dbOpen();
-        $stmt = $connection->prepare("SELECT admin_billing.id,admin_billing.account_number, admin_billing.account_name, admin_billing.account_address, admin_billing.created_at, account_method.name FROM admin_billing INNER JOIN account_method ON account_method.id = admin_billing.account_method");
+        $stmt = $connection->prepare("SELECT admin_billing.id,admin_billing.account_number, admin_billing.account_name, admin_billing.account_address, admin_billing.created_at,admin_billing.account_method as name  FROM admin_billing");
         $stmt->execute();
 
         $data = $stmt->fetchall();
@@ -14,12 +14,12 @@ class cashIn extends DB{
         
     }
 
-    protected function insertPayment($cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $cashin_image, $user_id){
+    protected function insertPayment($cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $cashin_image, $user_id,$account_name, $account_number, $account_method){
 
         $datetimetoday = date("Y-m-d H:i:s");
         $con = $this->dbOpen();
         $stmt = $con->prepare("INSERT INTO payment_details (user_id,payment_amount, payment_method, payment_reference, date_purchased, time_purchased, payment_image, created_at) VALUES (?,?,?,?,?,?,?,?) ");
-        // $transaction = new transactionsctnr($user_id, null,'cash-in',)
+       
 
         if(!$stmt->execute(array($user_id, $cashin_amount, $cashin_method, $cashin_reference, $cashin_date, $cashin_time, $cashin_image, $datetimetoday))){
             $stmt = null;
@@ -42,8 +42,10 @@ class cashIn extends DB{
         }
         else{
             header("location: ../investors-panel/cashin.php?success=1");
-        }
 
+            $transaction = new transactionsctnr($user_id, null,$cashin_method, $datetimetoday, 'Cash-in sent to '.$account_method.' in Account Name: '.$account_name.' and Account Number: '.$account_number.' sent to Account Name: ', $cashin_reference);
+        }
+    
     }
 
     protected function paymentDetails($id){
@@ -76,7 +78,7 @@ class cashIn extends DB{
     protected function allCashins(){
 
         $connection = $this->dbOpen();
-        $stmt = $connection->prepare("SELECT purchase_details.payment_id,purchase_details.transaction_number, purchase_details.compounded, purchase_details.payout, purchase_details.initial_investment, purchase_details.status, purchase_details.created_at, payment_details.payment_amount, payment_details.payment_method, payment_details.payment_reference, payment_details.date_purchased, payment_details.time_purchased, payment_details.payment_image FROM purchase_details INNER JOIN payment_details ON purchase_details.payment_id = payment_details.id");
+        $stmt = $connection->prepare("SELECT users.id as user_id, users.first_name, users.last_name, purchase_details.payment_id,purchase_details.transaction_number, purchase_details.compounded, purchase_details.payout, purchase_details.initial_investment, purchase_details.status, purchase_details.created_at, payment_details.payment_amount, payment_details.payment_method, payment_details.payment_reference, payment_details.date_purchased, payment_details.time_purchased, payment_details.payment_image, admin_billing.account_name, admin_billing.account_number, admin_billing.account_method FROM purchase_details INNER JOIN payment_details ON purchase_details.payment_id = payment_details.id LEFT JOIN users ON users.id = payment_details.user_id INNER JOIN admin_billing ON admin_billing.id = payment_details.payment_method;");
         $stmt->execute();
 
         $data = $stmt->fetchall();
@@ -89,8 +91,8 @@ class cashIn extends DB{
         }
     }
 
-    protected function approveUserPayment($id){
-        $datetimetoday = date("Y-m-d");
+    protected function approveUserPayment($id, $account_name, $account_number, $account_method, $user_id, $trans_number){ 
+        $datetimetoday = date("Y-m-d H:i:s");
         $date_withdrawable = date("Y-m-d", strtotime("+1 month", strtotime($datetimetoday)));
         $date_withdrawable2 = date("Y-m-d", strtotime("+2 day", strtotime($datetimetoday)));
         $lockindate = date("Y-m-d", strtotime("+1 year", strtotime($datetimetoday)));
@@ -104,12 +106,15 @@ class cashIn extends DB{
         }
         else{
             echo json_encode(array("status"=>"Approved"));
+            $transaction = new transactionsctnr($user_id, $this->billingMethod($id)['first_name'].' '. $this->billingMethod($id)['last_name'], $account_method, $datetimetoday, 'Approved the payment for '.$this->billingMethod($id)['first_name'].' '. $this->billingMethod($id)['last_name'].' with payment reference # '. $this->billingMethod($id)['payment_reference'].' in the account of '.$account_name.' with account number '.$account_number.' transaction#: '.$trans_number.'' , $this->billingMethod($id)['payment_reference']);
         }
+       
+
 
     }
 
-    protected function rejectUserPayment($id){
-
+    protected function rejectUserPayment($id,$account_name, $account_number, $account_method, $user_id, $trans_number){
+        $datetimetoday = date("Y-m-d H:i:s");
         $connection = $this->dbOpen();
         $stmt = $connection->prepare("UPDATE purchase_details SET status = ? WHERE payment_id = ?");
         if(!$stmt->execute(['rejected', $id])){
@@ -120,6 +125,7 @@ class cashIn extends DB{
         else{
             echo json_encode(array("status"=>"Rejected"));
         }
+        $transaction = new transactionsctnr($user_id, null, $account_method, $datetimetoday, 'cash-in with Transaction ID: '.$trans_number.' has been rejected', null);
     }
 
     protected function userInvestmentUpdate($user){
@@ -144,6 +150,18 @@ class cashIn extends DB{
         }
        
     }
+
+    protected function billingMethod($id){
+        $connection = $this->dbOpen();
+        $stmt = $connection->prepare("SELECT payment_details.id,payment_details.payment_method,payment_details.payment_reference, payment_details.user_id, users.first_name, users.last_name, users.email FROM payment_details LEFT JOIN users ON users.id = payment_details.user_id WHERE payment_details.id = ? GROUP BY id;");
+        $stmt->execute([$id]);
+
+        $data = $stmt->fetch();
+        
+        return $data;
+       
+    }
+   
 }
 
 
